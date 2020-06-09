@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Post extends Model
 {
-    protected $fillable=['user_id','page_id','title','short_description','description','rating','isRecipe'];
+    protected $fillable=['user_id','page_id','title','short_description','description','rating','isRecipe','isPublic'];
     
     public function page() { 
         return $this->belongsTo('App\Page');
@@ -19,4 +19,5 @@ class Post extends Model
     public function images() {
         return $this->hasMany('App\Image');
     }
+    
 }

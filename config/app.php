@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'cmsw'),
+    'name' => env('APP_NAME', 'Cooking Managment SW'),
 
     /*
     |--------------------------------------------------------------------------
