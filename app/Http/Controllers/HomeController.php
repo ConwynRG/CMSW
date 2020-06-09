@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Post;
+use App\Image;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -13,7 +16,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        //$this->middleware('auth');
     }
 
     /**
@@ -23,6 +26,11 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $query = Post::where('isPublic',true);
+        if(Auth::check()){
+            $query = $query->orWhere('user_id',Auth::id());
+        }
+        $posts = $query->orderByDesc('created_at')->get();
+        return view('home', array('posts'=>$posts));
     }
 }
