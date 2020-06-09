@@ -36,13 +36,13 @@
                                             </strong>
                                         @endif
                                         <h3 class="mb-2">
-                                            <a class="text-dark" href="#">{{ $posts[$i]->title }}</a>
+                                            <a class="text-dark" href="{{ url('post',$posts[$i]->id)}}">{{ $posts[$i]->title }}</a>
                                         </h3>
                                         <div class="mb-1 text-muted">{{ $posts[$i]->created_at->format('d M')}}</div>
                                         <p class="card-text mb-auto"> {{ $posts[$i]->short_description }}</p>
-                                        <p class=""card-text mb-auto">Author: <a href="#">{{ $posts[$i]->user->name }}</a></p>
+                                        <p class=""card-text mb-auto">Author: <a href="{{url('page',$posts[$i]->page_id)}}">{{ $posts[$i]->user->name }}</a></p>
                                     </div>
-                                    <a class="half-width">
+                                    <a class="half-width" href="{{url('post',$posts[$i]->id )}}">
                                     <img class="card-img-right img-thumbnail flex-auto d-none d-md-block cover-img" src="{{ url('uploads/'.(\App\Image::find($posts[$i]->mainImage_id))->filename) }}" alt="Card image cap">
                                     </a>
                                 </div>

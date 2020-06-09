@@ -38,7 +38,7 @@
                         </li>
                         @if(Auth::check())
                         <li class="nav-item">
-                            <a class="nav-link">My personal page</a>
+                            <a class="nav-link" href='{{ url('page',Auth::id())}}'>My personal page</a>
                         </li>
                         @endif
                     </ul>
