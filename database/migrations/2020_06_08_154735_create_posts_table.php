@@ -19,7 +19,7 @@ class CreatePostsTable extends Migration
             
             $table->foreignId('user_id')->constrained();
             $table->foreignId('page_id')->constrained();
-            $table->foreignId('mainImage_id')-constrained();
+            $table->integer('mainImage_id');
             $table->string('title', 100);
             $table->text('short_description')->nullable();
             $table->mediumText('description')->nullable();
