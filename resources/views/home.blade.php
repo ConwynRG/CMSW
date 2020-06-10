@@ -43,7 +43,7 @@
                                         <p class=""card-text mb-auto">Author: <a href="{{url('page',$posts[$i]->page_id)}}">{{ $posts[$i]->user->name }}</a></p>
                                     </div>
                                     <a class="half-width" href="{{url('post',$posts[$i]->id )}}">
-                                    <img class="card-img-right img-thumbnail flex-auto d-none d-md-block cover-img" src="{{ url('uploads/'.(\App\Image::find($posts[$i]->mainImage_id))->filename) }}" alt="Card image cap">
+                                    <img class="card-img-right img-thumbnail flex-auto d-none d-md-block cover-img" src="{{ url('uploads/'.(\App\Image::find($posts[$i]->mainImage_id))->filename) }}" alt="Post image">
                                     </a>
                                 </div>
                             </div>
