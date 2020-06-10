@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Post;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
@@ -13,6 +15,7 @@ class PostController extends Controller
      */
     public function index($id)
     {
+        
         return view('post');
     }
 
@@ -23,7 +26,8 @@ class PostController extends Controller
      */
     public function create()
     {
-        //
+        $userPosts = Post::where('user_id',Auth::id())->orderByDesc('created_at')->paginate(10);
+        return view('create_post', array('posts'=>$userPosts));
     }
 
     /**
@@ -34,7 +38,8 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        
+        return redirect('/page/'.Auth::id());
     }
 
     /**

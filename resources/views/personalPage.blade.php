@@ -24,7 +24,7 @@
           
         <div class="col-md-8 blog-main">
             @if(Auth::id() == $page->user_id)
-            <a type="button" class="btn btn-sm btn-outline-success float-right">Create new post</a>
+            <a type="button" class="btn btn-sm btn-outline-success float-right" href="{{ url('post/create') }}">Create new post</a>
             @endif
             <h3 class="pb-3 mb-4 font-italic border-bottom">
                 Latest user posts
@@ -51,9 +51,10 @@
                                         <p class="card-text"> {{ $post->short_description }} </p>
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div class="btn-group">
-                                                <a type="button" class="btn btn-sm btn-outline-secondary" href="{{url('post',$post->id)}}">View</a>
+                                                <a type="button" class="btn btn-sm btn-outline-primary" href="{{url('post',$post->id)}}">View</a>
                                                 @if(Auth::id() == $page->user_id)
-                                                    <a type="button" class="btn btn-sm btn-outline-secondary">Edit</a>
+                                                    <a type="button" class="btn btn-sm btn-outline-success">Edit</a>
+                                                    <a type="button" class="btn btn-sm btn-outline-danger">Delete</a>
                                                 @endif
                                             </div>
                                             <small class="text-muted">{{$timeDif[$post->id]}}</small>
