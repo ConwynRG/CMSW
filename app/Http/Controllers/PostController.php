@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Post;
+use App\Image;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 
 class PostController extends Controller
 {
@@ -37,7 +40,46 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
+        $newPost = new Post();
+        $newPost->title = $request['title'];
+        if(isset($request['short-description']) && !empty($request['short-description'])){
+            $newPost->short_description = $request['short-description'];
+        }else{
+            $newPost->short_description = null;
+        }
         
+        if(isset($request['description']) && !empty($request['description'])){
+            $newPost->description = $request['description'];
+        }else{
+            $newPost->description = null;
+        }
+        $newPost->isRecipe = $request['type'] == 'recipe' ? true : false;
+        $newPost->isPublic =  $request['access'] == 'public' ? true : false;
+        $newPost->rating = 0;
+        $newPost->user_id = Auth::id();
+        $newPost->page_id = Auth::id();
+        $newPost->mainImage_id = 0;
+        $newPost->save();
+        
+        for($i = 1; $i <= $request['image-count']; $i++){
+            $newImage = new Image();
+            $newImage->title = $request['imgTitle'.$i];
+            $newImage->description = $request['image-description'.$i];
+            $imageFile = $request->file('imgFile'.$i);
+            $imgFileExtension = $imageFile->getClientOriginalExtension();
+            Storage::disk('public')->put($imageFile->getFilename().'.'.$imgFileExtension, File::get($imageFile));
+            
+            $newImage->mime = $imageFile->getClientMimeType();
+            $newImage->original_filename = $imageFile->getClientOriginalName();
+            $newImage->filename = $imageFile->getFilename().'.'.$imgFileExtension;
+            $newImage->post_id = $newPost->id;
+            $newImage->save();
+            if($i == $request['imgMain']){
+                $newPost->mainImage_id = $newImage->id;
+                $newPost->save();
+            }
+        }
+
         return redirect('/page/'.Auth::id());
     }
 

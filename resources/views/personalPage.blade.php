@@ -46,7 +46,7 @@
                                         <h2 class="blog-post-title">{{ $post->title }}</h2>
                                         <p class="blog-post-meta">{{ $post->created_at->format('M d, Y') }} by <a href="#"> {{ $post->user->name }}</a></p>
                                     </div>
-                                    <img class="pt-0 card-img-top" style="height:200px; object-fit: cover" src="{{  url('uploads/'.(\App\Image::find($post->mainImage_id))->filename) }}" alt="Card image cap">
+                                    <img class="pt-0 card-img-top" style="height:250px; object-fit:cover; object-position: 50% 15%" src="{{  url('uploads/'.(\App\Image::find($post->mainImage_id))->filename) }}" alt="Card image cap">
                                     <div class="card-body">
                                         <p class="card-text"> {{ $post->short_description }} </p>
                                         <div class="d-flex justify-content-between align-items-center">

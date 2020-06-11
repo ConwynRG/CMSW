@@ -123,8 +123,8 @@ $(document).ready(function(){
                         {{ Form::label('type', 'Post Type') }}
                         {{ Form::select('type',[
                              ''=>'Choose...',
-                             'true' => 'Recipe',
-                             'false' => 'Common Post',
+                             'recipe' => 'Recipe',
+                             'commonPost' => 'Common Post',
                         ], null, ['class' => 'form-control']) }}
                     </div>
                 </div>

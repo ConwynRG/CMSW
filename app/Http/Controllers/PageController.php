@@ -59,7 +59,11 @@ class PageController extends Controller
 
             $timeDiff[$post->id] ='';
             if($hours < 24){
-                $timeDiff[$post->id] .=  'posted '.$hours.' hour '.$minutes.' minutes';
+                $timeDiff[$post->id] .=  'posted';
+                if($hours >= 1){
+                    $timeDiff[$post->id] .= ' '.$hours.' hour';
+                }
+                $timeDiff[$post->id] .=  ' '.$minutes.' minutes';
                 if($hours < 1){
                     $timeDiff[$post->id] .= ' '.$seconds.' seconds';
                 }
