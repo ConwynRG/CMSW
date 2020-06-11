@@ -127,7 +127,9 @@ class PostController extends Controller
      */
     public function edit($id)
     {
-        //
+        $post = Post::find($id);
+        $images = Image::where('post_id',$id);
+        return view('edit_post', array('images'=>$images, 'post'=>$post));
     }
 
     /**
@@ -152,7 +154,12 @@ class PostController extends Controller
     {   
         $post = Post::find($id);
         if($post->user_id == Auth::id()){
-            Image::where('post_id',$id)->delete();
+            
+            $images = Image::where('post_id',$id)->get();
+            foreach($images as $image){
+                Storage::disk('public')->delete($image->filename);
+                $image->delete();
+            }
             Comment::where('post_id',$id)->delete();
             $post = Post::find($id);
             $post->delete();
