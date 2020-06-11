@@ -15,8 +15,9 @@ use Illuminate\Support\Facades\Route;
 
 
 Auth::routes();
-Route::resource('post', 'PostController')->except(['index','update','destroy', 'show','edit']);
+Route::resource('post', 'PostController')->except(['index','update', 'destroy', 'show','edit']);
 Route::get('/', 'HomeController@index')->name('home');
 Route::get('page/{id}', 'PageController@show');
 Route::get('post/{id}','PostController@show');
+Route::delete('post/{id}/delete','PostController@destroy');
 //Route::get('post/create','PostController@create');

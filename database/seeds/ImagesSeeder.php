@@ -21,13 +21,13 @@ class ImagesSeeder extends Seeder
         Image::create(array('post_id'=>1,'title'=>'default image', 'description'=>null,
             'filename'=>'defaultPostImg.png',
             'mime'=>'IANA', 'original_filename' => 'defaultPostImg.png'));
-        Image::create(array('post_id'=>1,'title'=>'default image', 'description'=>null,
+        Image::create(array('post_id'=>2,'title'=>'default image', 'description'=>null,
             'filename'=>'defaultPostImg.png',
             'mime'=>'IANA', 'original_filename' => 'defaultPostImg.png'));
-        Image::create(array('post_id'=>1,'title'=>'default image', 'description'=>null,
+        Image::create(array('post_id'=>3,'title'=>'default image', 'description'=>null,
             'filename'=>'defaultPostImg.png',
             'mime'=>'IANA', 'original_filename' => 'defaultPostImg.png'));
-        Image::create(array('post_id'=>1,'title'=>'default image', 'description'=>null,
+        Image::create(array('post_id'=>4,'title'=>'default image', 'description'=>null,
             'filename'=>'defaultPostImg.png',
             'mime'=>'IANA', 'original_filename' => 'defaultPostImg.png'));
     }

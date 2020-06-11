@@ -54,7 +54,9 @@
                                                 <a type="button" class="btn btn-sm btn-outline-primary" href="{{url('post',$post->id)}}">View</a>
                                                 @if(Auth::id() == $page->user_id)
                                                     <a type="button" class="btn btn-sm btn-outline-success">Edit</a>
-                                                    <a type="button" class="btn btn-sm btn-outline-danger">Delete</a>
+                                                    {{Form::open(array('action'=>['PostController@destroy',$post->id], 'method'=>'delete', 'class'=>'m-0'))}}
+                                                        <input type="submit" class="btn btn-sm btn-outline-danger" style="border-top-left-radius:0px; border-bottom-left-radius:0px;" value="Delete" >
+                                                    {{Form::close() }}
                                                 @endif
                                             </div>
                                             <small class="text-muted">{{$timeDif[$post->id]}}</small>

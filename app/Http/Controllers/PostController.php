@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Post;
 use App\Image;
+use App\Comment;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -11,6 +12,10 @@ use Illuminate\Support\Facades\File;
 
 class PostController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth')->only(['create','destroy']);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -124,7 +129,14 @@ class PostController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
-    {
-        //
+    {   
+        $post = Post::find($id);
+        if($post->user_id == Auth::id()){
+            Image::where('post_id',$id)->delete();
+            Comment::where('post_id',$id)->delete();
+            $post = Post::find($id);
+            $post->delete();
+        }
+        return redirect('/page/'.Auth::id());
     }
 }
