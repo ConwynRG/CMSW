@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
+use Illuminate\Validation\Rule;
 
 class PostController extends Controller
 {
@@ -45,6 +46,25 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
+        $rules=array(
+            'title' => 'required|string|min:3',
+            'short-description' => 'nullable|string|min:5',
+            'description' => 'nullable|string|min:3',
+            'type' => 'required|min:1|',
+            'access' => 'required',
+            'imgMain' => 'required|integer|min:1|max:5',
+        );
+        
+        for($i = 1; $i<=$request['image-count'];$i++){
+            $rules['imgFile'.$i]= 'required|mimes:jpeg,bmp,png,jpg,svg,jfif';
+            $rules['imgTitle'.$i] = 'required|string|min:3';
+            $rules['image-description'.$i] = 'nullable|string|min:5';
+        }
+        
+        $this->validate($request, $rules);
+        
+        
+        
         $newPost = new Post();
         $newPost->title = $request['title'];
         if(isset($request['short-description']) && !empty($request['short-description'])){

@@ -14,7 +14,7 @@ function checkAddButtonState(num){
 }
 
 $(document).ready(function(){
-    
+    $('#image-count').val(1);
         
     $("#imageSection").on("change",'.custom-file-input', function() {
         var fileName = $(this).val().split("\\").pop();
@@ -40,19 +40,34 @@ $(document).ready(function(){
                         </div>
                         <div class="col-md-5 mb-3">
                             {{ Form::label('imgTitle`+num+`', 'Image Title') }}
-                            {{ Form::text('imgTitle`+num+`', null, ['class' => 'form-control']) }}
+                            {{ Form::text('imgTitle`+num+`', null, ['class' => 'form-control'.($errors->has('imgTitle`+num+`') ? ' is-invalid' : '')]) }}
+                            @if ($errors->has('imgTitle`+num+`'))
+                                <span class="invalid-feedback">
+                                    <strong>{{ $errors->first('imgTitle`+num+`') }}</strong>
+                                </span>
+                            @endif
                         </div>
                         <div class="col-md-4 mb-3">     
                             {{Form::label('imgFile`+num+`', 'File Image') }}
                             <div class="input-group">
                                 {{Form::file('imgFile`+num+`', ['class'=>'custom-file-input', 'id'=>'imgFile`+num+`']) }}
-                                {{Form::label('imgFile`+num+`', 'Choose file...', ['class'=>'custom-file-label']) }}
+                                {{Form::label('imgFile`+num+`', 'Choose file...', ['class'=>'custom-file-label'.($errors->has('imgFile`+num+`') ? ' is-invalid' : '')]) }}
+                                @if ($errors->has('imgFile`+num+`'))
+                                    <span class="invalid-feedback">
+                                        <strong>{{ $errors->first('imgFile`+num+`') }}</strong>
+                                    </span>
+                                @endif
                             </div>
                         </div>
                     </div>
                     <div class="mb-3">
                         {{Form::label('image-description`+num+`', 'Image Description')}} <span class="text-muted">(Optional)</span>
-                        {{Form::textarea('image-description`+num+`', null, ['class' => 'form-control', 'rows'=>'2']) }}                    
+                        {{Form::textarea('image-description`+num+`', null, ['class' => 'form-control'.($errors->has('image-description`+num+`') ? ' is-invalid' : ''), 'rows'=>'2']) }}                    
+                        @if ($errors->has('image-description`+num+`'))
+                            <span class="invalid-feedback">
+                                <strong>{{ $errors->first('image-description`+num+`') }}</strong>
+                            </span>
+                        @endif
                     </div>
                 </div>
             </div>`;
@@ -117,7 +132,12 @@ $(document).ready(function(){
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         {{ Form::label('title', 'Title') }}
-                        {{ Form::text('title', null, ['class' => 'form-control']) }}
+                        {{ Form::text('title', null, ['class' => 'form-control'.($errors->has('title') ? ' is-invalid' : '')]) }}
+                         @if ($errors->has('title'))
+                            <span class="invalid-feedback">
+                                <strong>{{ $errors->first('title') }}</strong>
+                            </span>
+                        @endif 
                     </div>
                     <div class="col-md-6 mb-3">
                         {{ Form::label('type', 'Post Type') }}
@@ -125,17 +145,32 @@ $(document).ready(function(){
                              ''=>'Choose...',
                              'recipe' => 'Recipe',
                              'commonPost' => 'Common Post',
-                        ], null, ['class' => 'form-control']) }}
+                        ], null, ['class' => 'form-control'.($errors->has('type') ? ' is-invalid' : '')]) }}
+                        @if ($errors->has('type'))
+                            <span class="invalid-feedback">
+                                <strong>{{ $errors->first('type') }}</strong>
+                            </span>
+                        @endif
                     </div>
                 </div>
                 <div class="mb-3">
                     {{Form::label('short-description', 'Short Description')}} <span class="text-muted">(Optional)</span>
-                    {{Form::textarea('short-description', null, ['class' => 'form-control', 'placeholder'=>'Make it short', 'rows'=>'2']) }}                    
+                    {{Form::textarea('short-description', null, ['class' => 'form-control'.($errors->has('short-description') ? ' is-invalid' : ''), 'placeholder'=>'Make it short', 'rows'=>'2']) }}                    
+                    @if ($errors->has('short-description'))
+                        <span class="invalid-feedback">
+                            <strong>{{ $errors->first('short-description') }}</strong>
+                        </span>
+                    @endif
                 </div>
                 
                 <div class="mb-3">
                     {{Form::label('description', 'Description')}} <span class="text-muted">(Optional)</span>
-                    {{Form::textarea('description', null, ['class' => 'form-control', 'placeholder'=>'Show passion as much as you want here', 'rows'=>'6']) }}                    
+                    {{Form::textarea('description', null, ['class' => 'form-control'.($errors->has('description') ? ' is-invalid' : ''), 'placeholder'=>'Show passion as much as you want here', 'rows'=>'6']) }}                    
+                    @if ($errors->has('description'))
+                        <span class="invalid-feedback">
+                            <strong>{{ $errors->first('description') }}</strong>
+                        </span>
+                    @endif
                 </div>
             
                 <h4 class="mb-3">Images</h4>
@@ -153,19 +188,34 @@ $(document).ready(function(){
                                 </div>
                                 <div class="col-md-5 mb-3">
                                     {{ Form::label('imgTitle1', 'Image Title') }}
-                                    {{ Form::text('imgTitle1', null, ['class' => 'form-control']) }}
+                                    {{ Form::text('imgTitle1', null, ['class' => 'form-control'.($errors->has('imgTitle1') ? ' is-invalid' : '')]) }}
+                                    @if ($errors->has('imgTitle1'))
+                                        <span class="invalid-feedback">
+                                            <strong>{{ $errors->first('imgTitle1') }}</strong>
+                                        </span>
+                                    @endif
                                 </div>
                                 <div class="col-md-4 mb-3">     
                                     {{Form::label('imgFile1', 'File Image') }}
                                     <div class="input-group">
-                                        {{Form::file('imgFile1', ['class'=>'custom-file-input', 'id'=>'imgFile1']) }}
+                                        {{Form::file('imgFile1', ['class'=>'custom-file-input'.($errors->has('imgFile1') ? ' is-invalid' : ''), 'id'=>'imgFile1']) }}
                                         {{Form::label('imgFile1', 'Choose file...', ['class'=>'custom-file-label']) }}
+                                        @if ($errors->has('imgFile1'))
+                                            <span class="invalid-feedback">
+                                                <strong>{{ $errors->first('imgFile1') }}</strong>
+                                            </span>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
                             <div class="mb-3">
                                 {{Form::label('image-description1', 'Image Description')}} <span class="text-muted">(Optional)</span>
-                                {{Form::textarea('image-description1', null, ['class' => 'form-control', 'rows'=>'2']) }}                    
+                                {{Form::textarea('image-description1', null, ['class' => 'form-control'.($errors->has('image-description1') ? ' is-invalid' : ''), 'rows'=>'2']) }}                    
+                                @if ($errors->has('image-description1'))
+                                    <span class="invalid-feedback">
+                                        <strong>{{ $errors->first('image-description1') }}</strong>
+                                    </span>
+                                @endif
                             </div>
                         </div>
                     </div>
