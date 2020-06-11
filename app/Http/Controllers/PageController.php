@@ -14,28 +14,9 @@ class PageController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($id)
+    public function index()
     {
-        $posts = Post::where('user_id', $id)->orderByDesc('created_at')->get();
-        $timeDiff = array();
-        foreach($posts as $post){
-            $start = Carbon::parse($post->created_at);
-            $end = Carbon::parse(Carbon::now());
-            $hours = $end->diffInHours($start);
-            $minutes = $end->diffInMinutes($start) % 60;
-            $seconds = $end->diffInSeconds($start) % 60;
-
-            $timeDiff[$post->id] ='';
-            if($hours < 24){
-                $timeDiff[$post->id] .=  'posted '.$hours.' hour '.$minutes.' minutes';
-                if($hours < 1){
-                    $timeDiff[$post->id] .= ' '.$seconds.' seconds';
-                }
-                $timeDiff[$post->id] .=' ago';
-            }
-        }
-        $page = Page::find($id);
-        return view('personalPage', array('posts'=>$posts, 'page'=>$page, 'timeDif' => $timeDiff));
+        
     }
 
     /**
@@ -67,7 +48,26 @@ class PageController extends Controller
      */
     public function show($id)
     {
-        //
+        $posts = Post::where('user_id', $id)->orderByDesc('created_at')->get();
+        $timeDiff = array();
+        foreach($posts as $post){
+            $start = Carbon::parse($post->created_at);
+            $end = Carbon::parse(Carbon::now());
+            $hours = $end->diffInHours($start);
+            $minutes = $end->diffInMinutes($start) % 60;
+            $seconds = $end->diffInSeconds($start) % 60;
+
+            $timeDiff[$post->id] ='';
+            if($hours < 24){
+                $timeDiff[$post->id] .=  'posted '.$hours.' hour '.$minutes.' minutes';
+                if($hours < 1){
+                    $timeDiff[$post->id] .= ' '.$seconds.' seconds';
+                }
+                $timeDiff[$post->id] .=' ago';
+            }
+        }
+        $page = Page::find($id);
+        return view('personalPage', array('posts'=>$posts, 'page'=>$page, 'timeDif' => $timeDiff));
     }
 
     /**
