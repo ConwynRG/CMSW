@@ -125,6 +125,7 @@ $(document).ready(function(){
             $('label[for="image-description'+i+'"]').attr('for','image-description'+(i-1));
             $('#image-description'+i).attr('name','image-description'+(i-1));
             $('#image-description'+i).attr('id','image-description'+(i-1));
+            $('#imgPicture'+i).attr('id','imgPicture'+(i-1));
             
         }
         totalImages--;

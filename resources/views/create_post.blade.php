@@ -19,6 +19,18 @@ $(document).ready(function(){
     $("#imageSection").on("change",'.custom-file-input', function() {
         var fileName = $(this).val().split("\\").pop();
         $(this).siblings(".custom-file-label").html(fileName.substr(0,20)); 
+        
+        var idString = $(this).attr('id');
+        var id = idString[idString.length-1];
+        
+        if (this.files && this.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#imgPicture'+id)
+                    .attr('src', e.target.result)
+            };
+            reader.readAsDataURL(this.files[0]);
+        }
     });
 
     $('#addImageBtn').on('click',function(){
@@ -70,6 +82,7 @@ $(document).ready(function(){
                         @endif
                     </div>
                 </div>
+                <img class="img-thumbnail flex-auto d-none d-md-block m-auto" id="imgPicture`+num+`" style=" width: 75%; object-fit:contain;" src="{{  url('uploads/defaultPostImg.png') }}" alt="Post image">
             </div>`;
         $('#imageSection').append(string);
         checkAddButtonState(num);
@@ -98,6 +111,7 @@ $(document).ready(function(){
             $('label[for="image-description'+i+'"]').attr('for','image-description'+(i-1));
             $('#image-description'+i).attr('name','image-description'+(i-1));
             $('#image-description'+i).attr('id','image-description'+(i-1));
+            $('#imgPicture'+i).attr('id','imgPicture'+(i-1));
         }
         totalImages--;
         $('#image-count').val(totalImages);
@@ -218,6 +232,7 @@ $(document).ready(function(){
                                 @endif
                             </div>
                         </div>
+                        <img class="img-thumbnail flex-auto d-none d-md-block m-auto" id="imgPicture1" style=" width: 75%; object-fit:contain;" src="{{  url('uploads/defaultPostImg.png') }}" alt="Post image">
                     </div>
                 </div>
                 <div class="mb-3">
@@ -237,7 +252,10 @@ $(document).ready(function(){
                     </div>
             
                 <hr class="mb-4">
-                {{Form::submit('Create post', ['class'=>'btn btn-primary btn-lg btn-block'])}}
+                <div class="btn-group m-auto" style="width:100%">
+                    <a type="button" class="mt-0 btn btn-secondary btn-lg btn-block" href="{{url('page',Auth::id())}}">Cancel</a>
+                    {{Form::submit('Create post', ['class'=>'mt-0 btn btn-primary btn-lg btn-block'])}}
+                </div>
             {{Form::close()}}
         </div>
       </div>
