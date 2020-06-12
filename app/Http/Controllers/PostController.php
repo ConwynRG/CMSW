@@ -63,8 +63,6 @@ class PostController extends Controller
         
         $this->validate($request, $rules);
         
-        
-        
         $newPost = new Post();
         $newPost->title = $request['title'];
         if(isset($request['short-description']) && !empty($request['short-description'])){
@@ -116,7 +114,10 @@ class PostController extends Controller
      */
     public function show($id)
     {
-        return view('post');
+        $post = Post::find($id);
+        $images = Image::where('post_id',$post->id)->get();
+        $comments = Comment::where('post_id', $post->id)->get();
+        return view('post', array('post'=>$post, 'images'=>$images, 'comments'=>$comments));
     }
 
     /**
@@ -127,7 +128,6 @@ class PostController extends Controller
      */
     public function edit($id)
     {
-        
         $post = Post::find($id);
         if(Auth::id() == $post->user_id){
             $images = Image::where('post_id',$id)->get();
@@ -225,17 +225,20 @@ class PostController extends Controller
      */
     public function destroy($id)
     {   
+        
         $post = Post::find($id);
-        if($post->user_id == Auth::id()){
-            
-            $images = Image::where('post_id',$id)->get();
-            foreach($images as $image){
-                Storage::disk('public')->delete($image->filename);
-                $image->delete();
+        if(Auth::id() == $post->id){
+            if($post->user_id == Auth::id()){
+
+                $images = Image::where('post_id',$id)->get();
+                foreach($images as $image){
+                    Storage::disk('public')->delete($image->filename);
+                    $image->delete();
+                }
+                Comment::where('post_id',$id)->delete();
+                $post = Post::find($id);
+                $post->delete();
             }
-            Comment::where('post_id',$id)->delete();
-            $post = Post::find($id);
-            $post->delete();
         }
         return redirect('/page/'.Auth::id());
     }
