@@ -4,7 +4,6 @@
 <script>
 $(document).ready(function () {
     $("#comment-create-section").on('click', '#send-comment-btn', function (e) {
-        console.log('hello');
         var url = "{{ action('CommentController@addComment') }}";
         var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
         var post_id = {{$post->id}};
@@ -14,20 +13,22 @@ $(document).ready(function () {
             $('#noCommentMessage').remove();
         }
         $('#comment-area').val('');
-        console.log(comment_text);
         $.ajax({
             type: "POST",
             url: url,
             data: { post_id: post_id, user_id: user_id, comment_text: comment_text, _token: CSRF_TOKEN },
-            success: function (data) {
-                console.log(data['comment_text']);
-                $('#comment-section').append(`<div class="card">
+            success: function (data) {                
+                var avatarLink = "uploads/"+data['user_avatar_filename'];
+                var userPage = "page/"+data['user_id'];
+                
+                $('#comment-section').append(`<div id="card`+data['comment_id']+`" class="card">
                         <div class="card-body clearfix">
-                            <img width="70" height="70" class="img-thumbnail rounded-circle float-left ml-2 mr-3" src="{{ url('uploads/'.Auth::user()->avatar_filename) }}" alt="Avatar image">
-
+                            <img width="70" height="70" class="img-thumbnail rounded-circle float-left ml-2 mr-3" src="{{ url('`+avatarLink+`') }}" alt="Avatar image">
+                            <img width="32" height="32" class="img-btn float-right ml-md-2 mb-2" id="delete-comment-btn" comment-id="`+data['comment_id']+`" src="{{ url('uploads/closeCross.png') }}" alt="Delete comment btn">
+                                
                             <p class="comment-post-content lead">`+data['comment_text']+`</p>
                             <p class="comment-post-meta"> posted at `+ data['date']+` by 
-                            <a href="{{url('page/'.Auth::user()->page->id)}}">{{Auth::user()->name}}</a></p>
+                            <a href="{{ url('`+userPage+`') }}"> `+data['username']+`</a></p>
                         </div>
                     </div>
                     <hr>`);    
@@ -36,7 +37,27 @@ $(document).ready(function () {
                 console.log('Error:', data);
             }
         });
-    })
+    });
+    
+    $("#comment-section").on('click', '#delete-comment-btn', function (e) {
+        var url = "{{ action('CommentController@deleteComment') }}";
+        var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+        var comment_id = $(this).attr('comment-id');
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: { comment_id: comment_id, _token: CSRF_TOKEN },
+            success: function (data) {
+                if(data['isDeleted']){
+                    $('#card'+data['comment_id']+' + hr').remove();
+                    $('#card'+data['comment_id']).remove();
+                }
+                },
+            error: function (data) {
+                console.log('Error:', data);
+            }
+        });
+    });
 });
 </script>
 <main role="main">
@@ -96,10 +117,13 @@ $(document).ready(function () {
                 <div id="noCommentMessage" class="lead mt-2 mb-5">Leave first comment about this post!</div>
                 @endif
                 @foreach($comments as $comment)
-                    <div class="card">
+                    <div id="card{{$comment->id}}" class="card">
+                        <span class="d-none" id="comment-id" value="{{$comment->id}}"></span>
                         <div class="card-body clearfix">
                             <img width="70" height="70" class="img-thumbnail rounded-circle float-left ml-2 mr-3" src="{{ url('uploads/'.$comment->user->avatar_filename) }}" alt="Avatar image">
-
+                            @if($comment->user_id == Auth::id())
+                                <img width="32" height="32" class="img-btn float-right ml-md-2 mb-2" id="delete-comment-btn" comment-id="{{$comment->id}}" src="{{ url('uploads/closeCross.png') }}" alt="Delete comment btn">
+                            @endif
                             <p class="comment-post-content lead">{{$comment->comment_text}}</p>
                             <p class="comment-post-meta"> posted at {{ $comment->created_at->format('M d, Y')}} ({{ Carbon\Carbon::now()->diffInHours($comment->created_at)}} hour(-s) {{ Carbon\Carbon::now()->diffInMinutes($comment->created_at) % 60}} minute(-s) ago) by <a href="{{url('page/'.$comment->post->page_id)}}">{{$comment->user->name}}</a></p>
                         </div>
@@ -150,6 +174,13 @@ $(document).ready(function () {
     .comment-post-meta{
         color: #999;
         margin-bottom: 0px;
+    }
+    .img-btn:hover{
+        opacity: 60%;   
+    }
+    .img-btn:active{
+        background-color: red;
+        opacity: 70%;   
     }
 
 </style>
