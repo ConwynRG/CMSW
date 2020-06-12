@@ -45,7 +45,7 @@ class PostController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
+    {   
         $rules=array(
             'title' => 'required|string|min:3',
             'short-description' => 'nullable|string|min:5',
@@ -141,8 +141,71 @@ class PostController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {
-        //
+    {    
+        $rules=array(
+            'title' => 'required|string|min:3',
+            'short-description' => 'nullable|string|min:5',
+            'description' => 'nullable|string|min:3',
+            'type' => 'required|min:1|',
+            'access' => 'required',
+            'imgMain' => 'required|integer|min:1|max:5',
+        );
+        
+        for($i = 1; $i<=$request['image-count'];$i++){
+            $rules['imgFile'.$i]= 'required_if: newImage'.$i.',==,1|mimes:jpeg,bmp,png,jpg,svg,jfif';
+            $rules['imgTitle'.$i] = 'required|string|min:3';
+            $rules['image-description'.$i] = 'nullable|string|min:5';
+        }
+        
+        $this->validate($request, $rules);
+        
+        for($i = 1; $i <= $request['image-toDelete-count']; $i++){
+            $image = Image::find($request['imgToDelete'.$i]);
+            Storage::disk('public')->delete($image->filename);
+            $image->delete();
+        }
+        
+        $post = Post::find($id);
+        $post->title = $request['title'];
+        if(isset($request['short-description']) && !empty($request['short-description'])){
+            $post->short_description = $request['short-description'];
+        }else{
+            $post->short_description = null;
+        }
+        
+        if(isset($request['description']) && !empty($request['description'])){
+            $post->description = $request['description'];
+        }else{
+            $post->description = null;
+        }
+        $post->isRecipe = $request['type'] == 'recipe' ? true : false;
+        $post->isPublic =  $request['access'] == 'public' ? true : false;
+        $post->save();
+        
+        for($i = 1; $i <= $request['image-count']; $i++){
+            if($request['newImage'.$i]=='1'){
+                $newImage = new Image();
+                $newImage->title = $request['imgTitle'.$i];
+                $newImage->description = $request['image-description'.$i];
+                $imageFile = $request->file('imgFile'.$i);
+                $imgFileExtension = $imageFile->getClientOriginalExtension();
+                Storage::disk('public')->put($imageFile->getFilename().'.'.$imgFileExtension, File::get($imageFile));
+
+                $newImage->mime = $imageFile->getClientMimeType();
+                $newImage->original_filename = $imageFile->getClientOriginalName();
+                $newImage->filename = $imageFile->getFilename().'.'.$imgFileExtension;
+                $newImage->post_id = $post->id;
+                $newImage->save();
+            }
+            
+            if($i == $request['imgMain']){
+                $post->mainImage_id = $request['newImage'.$i]=='1' ? $newImage->id : $request['oldImageId'.$i];
+            }
+            $post->save();
+        }
+
+        return redirect('/page/'.Auth::id());
+        
     }
 
     /**

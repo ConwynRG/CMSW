@@ -20,6 +20,7 @@ function deleteImageIfNecessary(positionNumber){
             var deleteId = Number($('#hiddenImageSection #image-toDelete-count').val()) + 1;
             $('#hiddenImageSection').append(`{{ Form::hidden('imgToDelete`+deleteId+`', '`+imageId+`') }}`);
             $('#hiddenImageSection #image-toDelete-count').val(deleteId);
+            $('#newImage'+positionNumber).val(true);
         }
     }
 }
@@ -96,6 +97,7 @@ $(document).ready(function(){
                     </div>
                 </div>
                 <img class="img-thumbnail flex-auto d-none d-md-block m-auto" id="imgPicture`+num+`" style=" width: 75%; object-fit:contain;" src="{{  url('uploads/defaultPostImg.png') }}" alt="Post image">
+                {{ Form::hidden('newImage`+num+`', '1',['id'=>'newImage`+num+`']) }}
             </div>`;
         $('#imageSection').append(string);
         checkAddButtonState(num);
@@ -126,6 +128,8 @@ $(document).ready(function(){
             $('#image-description'+i).attr('name','image-description'+(i-1));
             $('#image-description'+i).attr('id','image-description'+(i-1));
             $('#imgPicture'+i).attr('id','imgPicture'+(i-1));
+            $('#newImage'+i).attr('id','newImage'+(i-1));
+            $('#oldImageId'+i).attr('id','oldImageId'+(i-1));
             
         }
         totalImages--;
@@ -157,7 +161,7 @@ $(document).ready(function(){
           
         <div class="col-md-8 order-md-1">
             <h4 class="mb-3">Post content</h4>
-            {{ Form::open(array('action'=>['PostController@update',$post->id], 'enctype'=>'multipart/form-data', 'method'=>'post')) }}
+            {{ Form::open(array('action'=>['PostController@update',$post->id], 'enctype'=>'multipart/form-data', 'method'=>'PUT')) }}
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         {{ Form::label('title', 'Title') }}
@@ -220,7 +224,7 @@ $(document).ready(function(){
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-2 ml-3 mt-4 pt-2 mb-3 custom-control custom-radio">
-                                        {{Form::radio('imgMain',$i, $images[$i-1]->id == $post->mainImage_id ? true : false, ['class'=>'custom-control-input','id'=>'imgRadio1']) }}
+                                        {{Form::radio('imgMain',$i, $images[$i-1]->id == $post->mainImage_id ? true : false, ['class'=>'custom-control-input','id'=>'imgRadio'.$i]) }}
                                         {{Form::label('imgRadio'.$i, 'Main Image', ['class'=>'custom-control-label']) }}
                                     </div>
                                     <div class="col-md-5 mb-3">
@@ -255,6 +259,8 @@ $(document).ready(function(){
                                     @endif
                                 </div>
                                 <img class="img-thumbnail flex-auto d-none d-md-block m-auto" id="imgPicture{{$i}}" style=" width: 75%; object-fit:contain;" src="{{  url('uploads/'.($images[$i-1]->filename)) }}" alt="Post image">
+                                {{ Form::hidden('newImage'.$i, '0',['id'=>'newImage'.$i]) }}
+                                {{ Form::hidden('oldImageId'.$i, $images[$i-1]->id,['id'=>'oldImageId'.$i]) }}
                             </div>
                         </div>
                      @endfor
@@ -279,7 +285,7 @@ $(document).ready(function(){
                 <hr class="mb-4">
                 <div class="btn-group m-auto" style="width:100%">
                     <a type="button" class="mt-0 btn btn-secondary btn-lg btn-block" href="{{url('page',Auth::id())}}">Cancel</a>
-                    {{Form::submit('Create post', ['class'=>'mt-0 btn btn-primary btn-lg btn-block'])}}
+                    {{Form::submit('Save changes', ['class'=>'mt-0 btn btn-primary btn-lg btn-block'])}}
                 </div>
             {{Form::close()}}
         </div>
