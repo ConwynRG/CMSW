@@ -1,6 +1,138 @@
 @extends('layouts.app')
 
 @section('content')
+<script>
+function checkAddButtonState(num){
+    var addImageBtn = $('#addImageBtn');
+        addImageBtn.toggleClass('btn-outline-info', num < 5);
+        addImageBtn.toggleClass('btn-danger', num >= 5);
+        if(num >= 5)
+            addImageBtn.html('Max image count reached');
+        else
+            addImageBtn.html('Add extra image');
+}
+
+function deleteImageIfNecessary(positionNumber){
+    if($('#card'+positionNumber+'[oldImageId]').length){
+        var imageId = $('#card'+positionNumber+'[oldImageId]').attr('oldImageId');
+
+        if($('#hiddenImageSection input[value="'+imageId+'"]').length == 0){
+            var deleteId = Number($('#hiddenImageSection #image-toDelete-count').val()) + 1;
+            $('#hiddenImageSection').append(`{{ Form::hidden('imgToDelete`+deleteId+`', '`+imageId+`') }}`);
+            $('#hiddenImageSection #image-toDelete-count').val(deleteId);
+        }
+    }
+}
+
+$(document).ready(function(){
+   checkAddButtonState({{count($images)}});
+   
+   $("#imageSection").on("change",'.custom-file-input', function() {
+        var fileName = $(this).val().split("\\").pop();
+        $(this).siblings(".custom-file-label").html(fileName.substr(0,20));
+        
+        var idString = $(this).attr('id');
+        var id = idString[idString.length-1];
+        
+        if (this.files && this.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#imgPicture'+id)
+                    .attr('src', e.target.result)
+            };
+            reader.readAsDataURL(this.files[0]);
+        }
+        deleteImageIfNecessary(id);
+        
+    });
+
+    $('#addImageBtn').on('click',function(){
+       var num = Number($('#image-count').val());
+       if(num >= 5)
+           return;
+       num++;
+       $('#image-count').val(num);
+       var string = `<div class="mb-3 card bg-light" id="card`+num+`">
+                <div class="card-header bg-info text-light">
+                    <span class="card-title">Image#`+num+`</span>
+                    <button type="button" id="deleteImageBtn`+num+`" class="btn btn-danger btn-sm d-block m-auto float-right text-white font-weight-bold deleteImageBtn">Delete Image</button>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-2 ml-3 mt-4 pt-2 mb-3 custom-control custom-radio">
+                            {{Form::radio('imgMain','`+num+`',false, ['class'=>'custom-control-input','id'=>'imgRadio`+num+`']) }}
+                            {{Form::label('imgRadio`+num+`', 'Main Image', ['class'=>'custom-control-label']) }}
+                        </div>
+                        <div class="col-md-5 mb-3">
+                            {{ Form::label('imgTitle`+num+`', 'Image Title') }}
+                            {{ Form::text('imgTitle`+num+`', null, ['class' => 'form-control'.($errors->has('imgTitle`+num+`') ? ' is-invalid' : '')]) }}
+                            @if ($errors->has('imgTitle`+num+`'))
+                                <span class="invalid-feedback">
+                                    <strong>{{ $errors->first('imgTitle`+num+`') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                        <div class="col-md-4 mb-3">     
+                            {{Form::label('imgFile`+num+`', 'File Image') }}
+                            <div class="input-group">
+                                {{Form::file('imgFile`+num+`', ['class'=>'custom-file-input', 'id'=>'imgFile`+num+`']) }}
+                                {{Form::label('imgFile`+num+`', 'Choose file...', ['class'=>'custom-file-label'.($errors->has('imgFile`+num+`') ? ' is-invalid' : '')]) }}
+                                @if ($errors->has('imgFile`+num+`'))
+                                    <span class="invalid-feedback">
+                                        <strong>{{ $errors->first('imgFile`+num+`') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        {{Form::label('image-description`+num+`', 'Image Description')}} <span class="text-muted">(Optional)</span>
+                        {{Form::textarea('image-description`+num+`', null, ['class' => 'form-control'.($errors->has('image-description`+num+`') ? ' is-invalid' : ''), 'rows'=>'2']) }}                    
+                        @if ($errors->has('image-description`+num+`'))
+                            <span class="invalid-feedback">
+                                <strong>{{ $errors->first('image-description`+num+`') }}</strong>
+                            </span>
+                        @endif
+                    </div>
+                </div>
+                <img class="img-thumbnail flex-auto d-none d-md-block m-auto" id="imgPicture`+num+`" style=" width: 75%; object-fit:contain;" src="{{  url('uploads/defaultPostImg.png') }}" alt="Post image">
+            </div>`;
+        $('#imageSection').append(string);
+        checkAddButtonState(num);
+    });
+
+    $('#imageSection').on('click','.deleteImageBtn', function(){
+        var deletedString = $(this).attr('id');
+        var deletedNum = Number(deletedString[deletedString.length-1]);
+        deleteImageIfNecessary(deletedNum);
+        $('#card'+deletedNum).remove();
+        var totalImages = Number($('#image-count').val());
+        for(var i = deletedNum + 1; i <= totalImages; i++){
+            console.log('#card'+i+' card-title');
+            $('#card'+i+' .card-title').html('Image#'+(i-1));
+            $('#card'+i).attr('id','card'+(i-1));
+            $('#deleteImageBtn'+i).attr('id','deleteImageBtn'+(i-1));
+            $('.custom-radio input[value="'+i+'"]').attr('value',(i-1));
+            $('input#imgRadio'+i).attr('name', 'imgRadio'+(i-1));
+            $('input#imgRadio'+i).attr('id', 'imgRadio'+(i-1));
+            $('label[for="imgRadio'+i+'"]').attr('for','imgRadio'+(i-1));
+            $('label[for="imgTitle'+i+'"]').attr('for','imgTitle'+(i-1));
+            $('#imgTitle'+i).attr('name','imgTitle'+(i-1));
+            $('#imgTitle'+i).attr('id','imgTitle'+(i-1));
+            $('#imgFile'+i).attr('name','imgFile'+(i-1));
+            $('#imgFile'+i).attr('id','imgFile'+(i-1));
+            $('label[for="imgFile'+i+'"]').attr('for','imgFile'+(i-1));
+            $('label[for="image-description'+i+'"]').attr('for','image-description'+(i-1));
+            $('#image-description'+i).attr('name','image-description'+(i-1));
+            $('#image-description'+i).attr('id','image-description'+(i-1));
+            
+        }
+        totalImages--;
+        $('#image-count').val(totalImages);
+        checkAddButtonState(totalImages);
+    });
+});
+</script>
 <div class="container">
     <div class="row">
         <div class="col-md-4 order-md-2 mb-4">
@@ -71,11 +203,18 @@
             
                 <h4 class="mb-3">Images</h4>
                 <div id="imageSection">
-                    {{ Form::hidden('image-count', count($images), ['id'=>'image-count']) }}
+<!----------------- Image Section Starts ----------------------------------------->
+                    <div id="hiddenImageSection">
+                        {{ Form::hidden('image-count', count($images), ['id'=>'image-count']) }}
+                        {{ Form::hidden('image-toDelete-count', 0, ['id'=>'image-toDelete-count']) }}
+                    </div>
                     @for($i = 1; $i <= count($images); $i++)
-                        <div class="mb-3 card bg-light">
+                        <div id="card{{$i}}" class="mb-3 card bg-light" oldImageNumber="{{$i}}" oldImageId="{{$images[$i-1]->id}}">
                             <div class="card-header bg-info text-light">
-                                Image#1
+                                <span class="card-title">Image#{{$i}}</span>
+                                @if($i != 1)
+                                    <button type="button" id="deleteImageBtn{{$i}}" class="btn btn-danger btn-sm d-block m-auto float-right text-white font-weight-bold deleteImageBtn">Delete Image</button>
+                                @endif
                             </div>
                             <div class="card-body">
                                 <div class="row">
@@ -118,6 +257,7 @@
                             </div>
                         </div>
                      @endfor
+<!----------------- Image Section Ends ----------------------------------------->
                     </div>
                 <div class="mb-3">
                     <button type="button" id="addImageBtn" class="btn btn-outline-info d-block m-auto">Add extra image</button>
@@ -136,7 +276,10 @@
                     </div>
             
                 <hr class="mb-4">
-                {{Form::submit('Create post', ['class'=>'btn btn-primary btn-lg btn-block'])}}
+                <div class="btn-group m-auto" style="width:100%">
+                    <a type="button" class="mt-0 btn btn-secondary btn-lg btn-block" href="{{url('page',Auth::id())}}">Cancel</a>
+                    {{Form::submit('Create post', ['class'=>'mt-0 btn btn-primary btn-lg btn-block'])}}
+                </div>
             {{Form::close()}}
         </div>
     </div>
