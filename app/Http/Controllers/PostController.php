@@ -15,7 +15,7 @@ class PostController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth')->only(['create','destroy']);
+        $this->middleware('auth')->only(['create','destroy','edit', 'store']);
     }
     /**
      * Display a listing of the resource.
@@ -128,8 +128,9 @@ class PostController extends Controller
     public function edit($id)
     {
         $post = Post::find($id);
-        $images = Image::where('post_id',$id);
-        return view('edit_post', array('images'=>$images, 'post'=>$post));
+        $images = Image::where('post_id',$id)->get();
+        $comments = Comment::where('post_id',$id)->orderByDesc('created_at')->paginate(10);
+        return view('edit_post', array('images'=>$images, 'post'=>$post, 'comments'=>$comments));
     }
 
     /**
