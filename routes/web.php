@@ -20,3 +20,4 @@ Route::get('/', 'HomeController@index')->name('home');
 Route::get('page/{id}', 'PageController@show');
 Route::get('post/{id}','PostController@show');
 Route::delete('post/{id}/delete','PostController@destroy');
+Route::post('cart', 'CommentController@addComment');

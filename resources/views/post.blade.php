@@ -1,6 +1,44 @@
 @extends('layouts.app')
 
 @section('content')
+<script>
+$(document).ready(function () {
+    $("#comment-create-section").on('click', '#send-comment-btn', function (e) {
+        console.log('hello');
+        var url = "{{ action('CommentController@addComment') }}";
+        var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+        var post_id = {{$post->id}};
+        var user_id = {{Auth::id()}};
+        var comment_text = $('#comment-area').val();
+        if($('#noCommentMessage').length){
+            $('#noCommentMessage').remove();
+        }
+        $('#comment-area').val('');
+        console.log(comment_text);
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: { post_id: post_id, user_id: user_id, comment_text: comment_text, _token: CSRF_TOKEN },
+            success: function (data) {
+                console.log(data['comment_text']);
+                $('#comment-section').append(`<div class="card">
+                        <div class="card-body clearfix">
+                            <img width="70" height="70" class="img-thumbnail rounded-circle float-left ml-2 mr-3" src="{{ url('uploads/'.Auth::user()->avatar_filename) }}" alt="Avatar image">
+
+                            <p class="comment-post-content lead">`+data['comment_text']+`</p>
+                            <p class="comment-post-meta"> posted at `+ data['date']+` by 
+                            <a href="{{url('page/'.Auth::user()->page->id)}}">{{Auth::user()->name}}</a></p>
+                        </div>
+                    </div>
+                    <hr>`);    
+            },
+            error: function (data) {
+                console.log('Error:', data);
+            }
+        });
+    })
+});
+</script>
 <main role="main">
     <div class="container px-lg-5">  
         <div class="px-3 pt-3 pt-md-5 pb-md-1 mx-auto text-center">
@@ -70,11 +108,13 @@
                 @endforeach
             </div>
             @if(Auth::check())
+            <div id="comment-create-section">
                 <div class="form-group">
                     <label for="comment-area" class="lead">Leave your comment here</label>
                     <textarea class="form-control" id="comment-area" rows="4"></textarea>
                 </div>
-                <button  class="btn btn-primary btn-lg w-50 d-block m-auto">Send comment</button>
+                <button  id="send-comment-btn" class="btn btn-primary btn-lg w-50 d-block m-auto">Send comment</button>
+             </div>
             @endif
         </div>
         <footer>
