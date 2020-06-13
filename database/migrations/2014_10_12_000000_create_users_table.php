@@ -26,6 +26,8 @@ class CreateUsersTable extends Migration
             $table->string('avatar_filename')->default('defaultAvatar.png');
             $table->string('avatar_mime')->nullable();
             $table->string('avatar_original_filename')->nullable();
+            
+            $table->text('about_me')->nullable();
         });
     }
 

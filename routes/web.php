@@ -24,3 +24,5 @@ Route::post('comment/add', 'CommentController@addComment');
 Route::post('comment/delete', 'CommentController@deleteComment');
 Route::post('post/review/add', 'PostReviewController@addPostReview');
 Route::post('post/review/nullify', 'PostReviewController@nullifyPostReview');
+Route::get('settings','SettingsController@viewSettings');
+Route::put('settings/{id}','SettingsController@updateSettings');

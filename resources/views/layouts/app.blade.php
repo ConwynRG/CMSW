@@ -59,7 +59,7 @@
                             @endif
                         @else
                             <li class = "nav-item p-2">
-                                <img width="70" height="70" class="img-thumbnail rounded-circle" src="{{ url('uploads/'.Auth::user()->avatar_filename) }}" alt="Avatar image">
+                                <img class="img-thumbnail rounded-circle" style="width:70px; height:70px; object-fit: cover;" src="{{ url('uploads/'.Auth::user()->avatar_filename) }}" alt="Avatar image">
                             </li>
                             
                             <li class="nav-item dropdown d-table-cell">
@@ -68,7 +68,7 @@
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="">
+                                    <a class="dropdown-item" href="{{ action('SettingsController@viewSettings')}}">
                                         Settings
                                     </a>
                                     
