@@ -2,12 +2,26 @@
 
 @section('content')
 <script>
+function postRatingUpdate(rating){
+    $('#rating-number').html(rating);
+    if(rating >= 0){
+        $('#rating-number').removeClass('text-danger');
+        $('#rating-number').addClass('text-success');
+    }else{
+        $('#rating-number').removeClass('text-success');
+        $('#rating-number').addClass('text-danger');                            
+    }
+}
+
 $(document).ready(function () {
+    //Comment creation
     $("#comment-create-section").on('click', '#send-comment-btn', function (e) {
         var url = "{{ action('CommentController@addComment') }}";
         var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
         var post_id = {{$post->id}};
-        var user_id = {{Auth::id()}};
+        @if(Auth::check())
+            var user_id = {{Auth::id()}};
+        @endif
         var comment_text = $('#comment-area').val();
         if($('#noCommentMessage').length){
             $('#noCommentMessage').remove();
@@ -37,8 +51,8 @@ $(document).ready(function () {
                 console.log('Error:', data);
             }
         });
-    });
-    
+    });//Comment creation ends
+    //Comment deletion
     $("#comment-section").on('click', '#delete-comment-btn', function (e) {
         var url = "{{ action('CommentController@deleteComment') }}";
         var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
@@ -57,8 +71,74 @@ $(document).ready(function () {
                 console.log('Error:', data);
             }
         });
+    });//Comment deletion ends
+    
+    $('#review-btns').on('click','.review-btn',function(e){
+        var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+        var post_id = {{$post->id}};
+        @if(Auth::check())
+            var user_id = {{Auth::id()}};
+        @endif
+        var review_value = $(this).attr('review');
+        if($(this).hasClass('btn-outline-success') || $(this).hasClass('btn-outline-danger')){
+            var url = "{{ action('PostReviewController@addPostReview') }}";
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: { post_id: post_id, user_id: user_id, review_value: review_value, _token: CSRF_TOKEN },
+                success: function (data) {
+                    if(data['review_value']>0){
+                        $('#like-btn').removeClass('btn-outline-success');
+                        if(!$('#like-btn').hasClass('btn-success'))
+                            $('#like-btn').addClass('btn-success');
+                        
+                        $('#dislike-btn').removeClass('btn-danger');
+                        if(!$('#dislike-btn').hasClass('btn-outline-danger'))
+                            $('#dislike-btn').addClass('btn-outline-danger');
+                    }else{
+                        $('#dislike-btn').removeClass('btn-outline-danger');
+                        if(!$('#dislike-btn').hasClass('btn-danger'))
+                            $('#dislike-btn').addClass('btn-danger');
+                        
+                        $('#like-btn').removeClass('btn-success');
+                        if(!$('#like-btn').addClass('btn-outline-success'))
+                            $('#like-btn').addClass('btn-outline-success');
+                                                        
+                    }
+                    
+                    postRatingUpdate(data['post_rating']);
+                    
+                    },
+                error: function (data) {
+                    console.log('Error:', data);
+                }
+            });
+        }else{
+            var url = "{{ action('PostReviewController@nullifyPostReview') }}";
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: { post_id: post_id, user_id: user_id, review_value: review_value, _token: CSRF_TOKEN },
+                success: function (data) {
+                    if(data['review_value']>0){ 
+                        $('#like-btn').removeClass('btn-success');
+                        if(!$('#like-btn').hasClass('btn-outline-success'))
+                            $('#like-btn').addClass('btn-outline-success');
+                    }else{
+                        $('#dislike-btn').removeClass('btn-danger');
+                        if(!$('#dislike-btn').hasClass('btn-outline-danger'))
+                            $('#dislike-btn').addClass('btn-outline-danger');
+                    }
+                    postRatingUpdate(data['post_rating']);
+                    
+                    },
+                error: function (data) {
+                    console.log('Error:', data);
+                }
+            });
+        }
     });
-});
+});//Document ready ends
 </script>
 <main role="main">
     <div class="container px-lg-5">  
@@ -98,19 +178,24 @@ $(document).ready(function () {
             </div>
             <hr>
         @endfor
+<!--------RATING SECTION----------------->
         <div class="lead mx-md-5 px-md-5 my-auto clearfix">
-            <div class="float-left align-middle my-2 w-50 text-center">
+            <div class="float-left align-middle my-2 @if(Auth::check()) w-50 @else w-100 @endif text-center">
                 <div class="mb-1">Post Rating :</div>
-                <span class="@if($post->rating >= 0)text-success @else text-danger @endif">{{$post->rating}}</span>
+                <span id="rating-number" class="@if($post->rating >= 0)text-success @else text-danger @endif">{{$post->rating}}</span>
             </div>
-            <div class="float-right w-50 my-2 text-center">
+            @if(Auth::check())
+            <div class="float-right w-50 my-2 text-center" id="review-btns">
                 <span class="">Review this post:</span><br>
-                <button class="btn btn-outline-success w-25" style="min-width: 80px;">Like</button> 
-                <button class="btn btn-outline-danger w-25" style="min-width: 80px;">Dislike</button> 
+                <button id="like-btn" class="btn @if($review_value > 0) btn-success @else btn-outline-success @endif w-25 review-btn" review="1" style="min-width: 80px;">Like</button> 
+                <button id="dislike-btn" class="btn @if($review_value < 0) btn-danger @else btn-outline-danger @endif w-25 review-btn"  review="-1" style="min-width: 80px;">Dislike</button> 
             </div>
+            @endif
         </div>
+<!-----------RATINS SECTION ENDS------------------->
         <hr>
         <div class="blog-post">
+<!------------ COMMENT SECTION -------------->
             <h2 class="comment-post-title">Comment Section</h2>
             <div id="comment-section">
                 @if(count($comments)==0)
@@ -140,6 +225,7 @@ $(document).ready(function () {
                 <button  id="send-comment-btn" class="btn btn-primary btn-lg w-50 d-block m-auto">Send comment</button>
              </div>
             @endif
+<!------------ COMMENT SECTION ENDS -------------->
         </div>
         <footer>
             <p>

@@ -22,3 +22,5 @@ Route::get('post/{id}','PostController@show');
 Route::delete('post/{id}/delete','PostController@destroy');
 Route::post('comment/add', 'CommentController@addComment');
 Route::post('comment/delete', 'CommentController@deleteComment');
+Route::post('post/review/add', 'PostReviewController@addPostReview');
+Route::post('post/review/nullify', 'PostReviewController@nullifyPostReview');

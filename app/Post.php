@@ -20,4 +20,8 @@ class Post extends Model
         return $this->hasMany('App\Image');
     }
     
+    public function postReviews(){
+        return $this->hasMany('App\PostReview');
+    }
+    
 }

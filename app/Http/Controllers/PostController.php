@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Post;
 use App\Image;
 use App\Comment;
+use App\PostReview;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -117,7 +118,12 @@ class PostController extends Controller
         $post = Post::find($id);
         $images = Image::where('post_id',$post->id)->get();
         $comments = Comment::where('post_id', $post->id)->get();
-        return view('post', array('post'=>$post, 'images'=>$images, 'comments'=>$comments));
+        $review_value = 0;
+        if(PostReview::where('post_id',$post->id)->where('user_id',AUth::id())->count()>0){
+            $review_value = PostReview::where('post_id',$post->id)->where('user_id',AUth::id())->first()->review;
+        }
+        return view('post', array('post'=>$post, 'images'=>$images, 'comments'=>$comments, 
+            'review_value'=>$review_value));
     }
 
     /**
