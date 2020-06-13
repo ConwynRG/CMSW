@@ -5,7 +5,7 @@
     <div class="row">
         <aside class="col-md-4 blog-sidebar">
             <div>
-                <img width="250" height="250" class="img-thumbnail rounded-circle centerInDiv" src="{{ url('uploads/'.$page->user->avatar_filename) }}" alt="Avatar image">
+                <img class="img-thumbnail rounded-circle centerInDiv"  style="width:250px; height:250px; object-fit: cover;" src="{{ url('uploads/'.$page->user->avatar_filename) }}" alt="Avatar image">
             </div>
             @if(Auth::check() && $page->user->id != Auth::id())
             <div class="pl-4 pr-4 m-3 bg-light rounded">
@@ -16,7 +16,8 @@
             <div class="pl-4 mb-3 bg-light rounded lead">
                 <h3 class="font-italic">About</h3>
                 <p class="mb-0">Username: {{$page->user->name}}</p>
-                <p class="mb-0">Email: {{$page->user->email}}</p>
+                <p class="mb-3">Email: {{$page->user->email}}</p>
+                <p class="mb-3">{{ $page->user->about_me }}</p>
             </div>
             
             

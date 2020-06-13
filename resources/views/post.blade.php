@@ -205,7 +205,7 @@ $(document).ready(function () {
                     <div id="card{{$comment->id}}" class="card">
                         <span class="d-none" id="comment-id" value="{{$comment->id}}"></span>
                         <div class="card-body clearfix">
-                            <img width="70" height="70" class="img-thumbnail rounded-circle float-left ml-2 mr-3" src="{{ url('uploads/'.$comment->user->avatar_filename) }}" alt="Avatar image">
+                            <img class="img-thumbnail rounded-circle float-left ml-2 mr-3"  style="width:70px; height:70px; object-fit: cover;" src="{{ url('uploads/'.$comment->user->avatar_filename) }}" alt="Avatar image">
                             @if($comment->user_id == Auth::id())
                                 <img width="32" height="32" class="img-btn float-right ml-md-2 mb-2" id="delete-comment-btn" comment-id="{{$comment->id}}" src="{{ url('uploads/closeCross.png') }}" alt="Delete comment btn">
                             @endif
