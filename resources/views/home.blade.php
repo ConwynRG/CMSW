@@ -40,10 +40,15 @@
                                         </h3>
                                         <div class="mb-1 text-muted">{{ $posts[$i]->created_at->format('d M')}}</div>
                                         <p class="card-text mb-auto"> {{ $posts[$i]->short_description }}</p>
-                                        <p class=""card-text mb-auto"> {{ __('messages.author')}}: <a href="{{url('page',$posts[$i]->page_id)}}">{{ $posts[$i]->user->name }}</a></p>
+                                        <p class="card-text mt-4 mb-2"> {{ __('messages.author')}}: <a href="{{url('page',$posts[$i]->page_id)}}">{{ $posts[$i]->user->name }}</a></p>
+                                        @if(Auth::user()->isAdmin)
+                                        {{Form::open(array('action'=>['PostController@destroy',$posts[$i]->id], 'method'=>'delete', 'class'=>'m-0'))}}
+                                            <input type="submit" class="btn btn-sm btn-outline-danger" value="{{__('messages.delete_post')}}" >
+                                        {{Form::close() }}
+                                        @endif
                                     </div>
                                     <a class="half-width" href="{{url('post',$posts[$i]->id )}}">
-                                    <img class="card-img-right img-thumbnail flex-auto d-none d-md-block cover-img" src="{{ url('uploads/'.(\App\Image::find($posts[$i]->mainImage_id))->filename) }}" alt="Post image">
+                                    <img class="card-img-right img-thumbnail d-md-block cover-img" src="{{ url('uploads/'.(\App\Image::find($posts[$i]->mainImage_id))->filename) }}" alt="Post image">
                                     </a>
                                 </div>
                             </div>
@@ -62,8 +67,9 @@
         width:50%;
     }
     
-    .cover-img{
+    img.cover-img{
         width:100%;
+        height: 100%;
         object-fit: cover;
     }
 </style>

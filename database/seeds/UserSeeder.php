@@ -18,5 +18,6 @@ class UserSeeder extends Seeder
         User::create(array('name' => 'Steven', 'email' => 'steven@test.com', 'password' => bcrypt('123'), 'avatar_filename' => 'defaultAvatar.png'));
         User::create(array('name' => 'Silvia', 'email' => 'silvia@test.com', 'password' => bcrypt('123'), 'avatar_filename' => 'defaultAvatar.png'));
         User::create(array('name' => 'Dwayne', 'email' => 'dwaynen@test.com', 'password' => bcrypt('123'), 'avatar_filename' => 'defaultAvatar.png'));
+        User::create(array('name' => 'Administrator', 'email' => 'admin@test.com', 'password'=> bcrypt('secret'), 'avatar_filename' => 'defaultAvatar.png', 'isAdmin'=>true));
     }
 }

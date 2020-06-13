@@ -18,5 +18,6 @@ class PageSeeder extends Seeder
         Page::create(array('user_id' => 3));
         Page::create(array('user_id' => 4));
         Page::create(array('user_id' => 5));
+        Page::create(array('user_id' => 6));
     }
 }

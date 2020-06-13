@@ -26,11 +26,15 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $query = Post::where('isPublic',true);
-        if(Auth::check()){
-            $query = $query->orWhere('user_id',Auth::id());
+        if(Auth::user()->isAdmin){
+            $posts = Post::all();
+        }else{
+            $query = Post::where('isPublic',true);
+            if(Auth::check()){
+                $query = $query->orWhere('user_id',Auth::id());
+            }
+            $posts = $query->orderByDesc('created_at')->get();
         }
-        $posts = $query->orderByDesc('created_at')->get();
         return view('home', array('posts'=>$posts));
     }
 }

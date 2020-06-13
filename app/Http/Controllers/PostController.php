@@ -233,19 +233,22 @@ class PostController extends Controller
     {   
         
         $post = Post::find($id);
-        if(Auth::id() == $post->id){
-            if($post->user_id == Auth::id()){
-
-                $images = Image::where('post_id',$id)->get();
-                foreach($images as $image){
-                    Storage::disk('public')->delete($image->filename);
-                    $image->delete();
-                }
-                Comment::where('post_id',$id)->delete();
-                $post = Post::find($id);
-                $post->delete();
+        
+        if($post->user_id == Auth::id() || Auth::user()->isAdmin){
+            $images = Image::where('post_id',$id)->get();
+            foreach($images as $image){
+                Storage::disk('public')->delete($image->filename);
+                $image->delete();
             }
+            PostReview::where('post_id',$id)->delete();
+            Comment::where('post_id',$id)->delete();
+            $post->delete();
         }
-        return redirect('/page/'.Auth::id());
+        
+        if(Auth::user()->isAdmin){
+            return redirect()->back();
+        }else{
+            return redirect('/page/'.Auth::id());
+        }
     }
 }

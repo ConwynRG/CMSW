@@ -28,6 +28,7 @@ class CreateUsersTable extends Migration
             $table->string('avatar_original_filename')->nullable();
             
             $table->text('about_me')->nullable();
+            $table->boolean('isAdmin')->default(false);
         });
     }
 
