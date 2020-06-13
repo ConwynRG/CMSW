@@ -26,3 +26,4 @@ Route::post('post/review/add', 'PostReviewController@addPostReview');
 Route::post('post/review/nullify', 'PostReviewController@nullifyPostReview');
 Route::get('settings','SettingsController@viewSettings');
 Route::put('settings/{id}','SettingsController@updateSettings');
+Route::get('lang/{locale}','LanguageController');

@@ -149,8 +149,8 @@ $(document).ready(function () {
         @if($post->description != null)
             <hr>
             <div class="blog-post">
-                <h2 class="blog-post-title">Main Description</h2>
-                <p class="blog-post-meta">{{ $post->created_at->format('M d, Y')}} by <a href="{{url('page',$post->page_id)}}">{{$post->user->name}}</a></p>
+                <h2 class="blog-post-title">{{__('messages.main_desc')}}</h2>
+                <p class="blog-post-meta">{{ $post->created_at->format('M d, Y')}} {{__('messages.created_by')}} <a href="{{url('page',$post->page_id)}}">{{$post->user->name}}</a></p>
 
                 <p>{{$post->description}}</p>
             </div>
@@ -181,14 +181,14 @@ $(document).ready(function () {
 <!--------RATING SECTION----------------->
         <div class="lead mx-md-5 px-md-5 my-auto clearfix">
             <div class="float-left align-middle my-2 @if(Auth::check()) w-50 @else w-100 @endif text-center">
-                <div class="mb-1">Post Rating :</div>
+                <div class="mb-1">{{__('messages.post_rating')}}:</div>
                 <span id="rating-number" class="@if($post->rating >= 0)text-success @else text-danger @endif">{{$post->rating}}</span>
             </div>
             @if(Auth::check())
             <div class="float-right w-50 my-2 text-center" id="review-btns">
-                <span class="">Review this post:</span><br>
-                <button id="like-btn" class="btn @if($review_value > 0) btn-success @else btn-outline-success @endif w-25 review-btn" review="1" style="min-width: 80px;">Like</button> 
-                <button id="dislike-btn" class="btn @if($review_value < 0) btn-danger @else btn-outline-danger @endif w-25 review-btn"  review="-1" style="min-width: 80px;">Dislike</button> 
+                <span class="">{{__('messages.review_post')}}:</span><br>
+                <button id="like-btn" class="btn @if($review_value > 0) btn-success @else btn-outline-success @endif w-25 review-btn" review="1" style="min-width: 80px;">{{__('messages.like')}}</button> 
+                <button id="dislike-btn" class="btn @if($review_value < 0) btn-danger @else btn-outline-danger @endif w-25 review-btn"  review="-1" style="min-width: 80px;">{{__('messages.dislike')}}</button> 
             </div>
             @endif
         </div>
@@ -196,10 +196,10 @@ $(document).ready(function () {
         <hr>
         <div class="blog-post">
 <!------------ COMMENT SECTION -------------->
-            <h2 class="comment-post-title">Comment Section</h2>
+            <h2 class="comment-post-title">{{__('messages.comment_section')}}</h2>
             <div id="comment-section">
                 @if(count($comments)==0)
-                <div id="noCommentMessage" class="lead mt-2 mb-5">Leave first comment about this post!</div>
+                <div id="noCommentMessage" class="lead mt-2 mb-5">{{__('messages.first_comment')}}</div>
                 @endif
                 @foreach($comments as $comment)
                     <div id="card{{$comment->id}}" class="card">
@@ -210,7 +210,7 @@ $(document).ready(function () {
                                 <img width="32" height="32" class="img-btn float-right ml-md-2 mb-2" id="delete-comment-btn" comment-id="{{$comment->id}}" src="{{ url('uploads/closeCross.png') }}" alt="Delete comment btn">
                             @endif
                             <p class="comment-post-content lead">{{$comment->comment_text}}</p>
-                            <p class="comment-post-meta"> posted at {{ $comment->created_at->format('M d, Y')}} ({{ Carbon\Carbon::now()->diffInHours($comment->created_at)}} hour(-s) {{ Carbon\Carbon::now()->diffInMinutes($comment->created_at) % 60}} minute(-s) ago) by <a href="{{url('page/'.$comment->post->page_id)}}">{{$comment->user->name}}</a></p>
+                            <p class="comment-post-meta"> {{__('messages.posted')}} {{ $comment->created_at->format('M d, Y')}} ({{ Carbon\Carbon::now()->diffInHours($comment->created_at)}} {{__('messages.hour')}} {{ Carbon\Carbon::now()->diffInMinutes($comment->created_at) % 60}} {{__('messages.minute')}} {{__('messages.ago')}}) {{__('messages.created_by')}} <a href="{{url('page/'.$comment->post->page_id)}}">{{$comment->user->name}}</a></p>
                         </div>
                     </div>
                     <hr>
@@ -219,17 +219,17 @@ $(document).ready(function () {
             @if(Auth::check())
             <div id="comment-create-section">
                 <div class="form-group">
-                    <label for="comment-area" class="lead">Leave your comment here</label>
+                    <label for="comment-area" class="lead">{{ __('messages.leave_comment')}}</label>
                     <textarea class="form-control" id="comment-area" rows="4"></textarea>
                 </div>
-                <button  id="send-comment-btn" class="btn btn-primary btn-lg w-50 d-block m-auto">Send comment</button>
+                <button  id="send-comment-btn" class="btn btn-primary btn-lg w-50 d-block m-auto">{{ __('messages.send_comment')}}</button>
              </div>
             @endif
 <!------------ COMMENT SECTION ENDS -------------->
         </div>
         <footer>
             <p>
-                <a href="#">Back to top</a>
+                <a href="#">{{__('messages.back_top')}}</a>
             </p>
         </footer>
     </div>

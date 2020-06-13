@@ -59,15 +59,15 @@ class PageController extends Controller
 
             $timeDiff[$post->id] ='';
             if($hours < 24){
-                $timeDiff[$post->id] .=  'posted';
+                $timeDiff[$post->id] .=  __('messages.posted');
                 if($hours >= 1){
-                    $timeDiff[$post->id] .= ' '.$hours.' hour';
+                    $timeDiff[$post->id] .= ' '.$hours.' '.__('messages.hour');
                 }
-                $timeDiff[$post->id] .=  ' '.$minutes.' minutes';
+                $timeDiff[$post->id] .=  ' '.$minutes.' '.__('messages.minute');
                 if($hours < 1){
-                    $timeDiff[$post->id] .= ' '.$seconds.' seconds';
+                    $timeDiff[$post->id] .= ' '.$seconds.' '.__('messages.second');
                 }
-                $timeDiff[$post->id] .=' ago';
+                $timeDiff[$post->id] .=' '.__('messages.ago');
             }
         }
         $page = Page::find($id);

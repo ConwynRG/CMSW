@@ -6,14 +6,14 @@
         <div class="col-md-18">
             <div class="jumbotron p-3 p-md-5 text-white rounded bg-success">
                 <div class="col-md-8 px-0">
-                    <h1 class="display-4 font-italic">Cooking Management Social Web</h1>
-                    <p class="lead mb-0"><a class="text-white font-weight-bold">The place where you can share your cooking experience or learn something new</a></p>
+                    <h1 class="display-4 font-italic"> {{ __('messages.cmsw_title')}}</h1>
+                    <p class="lead mb-0"><a class="text-white font-weight-bold"> {{ __('messages.cmsw_underText')  }}</a></p>
                 </div>
             </div>
             <div class="card">
                 <div class="card-header bg-secondary">
                     <h3 class="pb-2 mb-2 font-italic border-bottom d-flex justify-content-center font-weight-bold text-white">
-                        Latest posts
+                        {{ __('messages.latest_posts') }}
                     </h3>
                 </div>
                 
@@ -28,11 +28,11 @@
                                     <div class="card-body d-flex flex-column align-items-start half-width">
                                         @if($posts[$i]->isRecipe)
                                             <strong class="d-inline-block mb-2 text-success">
-                                                Recipe @if($posts[$i]->isPublic) (Public) @endif
+                                                {{ __('messages.recipe')}} @if($posts[$i]->isPublic) ({{__('messages.public')}}) @endif
                                             </strong>
                                         @else
                                             <strong class="d-inline-block mb-2 text-primary">
-                                                Result sharing @if($posts[$i]->isPublic) (Public) @endif
+                                                {{ __('messages.common_post') }} @if($posts[$i]->isPublic) ({{__('messages.public')}}) @endif
                                             </strong>
                                         @endif
                                         <h3 class="mb-2">
@@ -40,7 +40,7 @@
                                         </h3>
                                         <div class="mb-1 text-muted">{{ $posts[$i]->created_at->format('d M')}}</div>
                                         <p class="card-text mb-auto"> {{ $posts[$i]->short_description }}</p>
-                                        <p class=""card-text mb-auto">Author: <a href="{{url('page',$posts[$i]->page_id)}}">{{ $posts[$i]->user->name }}</a></p>
+                                        <p class=""card-text mb-auto"> {{ __('messages.author')}}: <a href="{{url('page',$posts[$i]->page_id)}}">{{ $posts[$i]->user->name }}</a></p>
                                     </div>
                                     <a class="half-width" href="{{url('post',$posts[$i]->id )}}">
                                     <img class="card-img-right img-thumbnail flex-auto d-none d-md-block cover-img" src="{{ url('uploads/'.(\App\Image::find($posts[$i]->mainImage_id))->filename) }}" alt="Post image">

@@ -36,11 +36,11 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto h5">
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url('/') }}"> Feed view </a>
+                            <a class="nav-link" href="{{ url('/') }}"> {{__('messages.feed_view') }}</a>
                         </li>
                         @if(Auth::check())
                         <li class="nav-item">
-                            <a class="nav-link" href='{{ url('page',Auth::id())}}'>My personal page</a>
+                            <a class="nav-link" href='{{ url('page',Auth::id())}}'>{{__('messages.my_personal_page')}}</a>
                         </li>
                         @endif
                     </ul>
@@ -48,6 +48,15 @@
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto d-table align-middle h5">
                         <!-- Authentication Links -->
+                        <li class="nav-item dropdown d-table-cell">
+                            <span id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                {{ __('messages.language') }} <span class="caret"></span>
+                            </span>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                <a class="nav-link" href="/lang/en">EN</a>
+                                <a class="nav-link" href="/lang/lv">LV</a> 
+                            </div>
+                        </li>
                         @guest
                             <li class="nav-item d-table-cell">
                                 <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
@@ -58,10 +67,6 @@
                                 </li>
                             @endif
                         @else
-                            <li class = "nav-item p-2">
-                                <img class="img-thumbnail rounded-circle" style="width:70px; height:70px; object-fit: cover;" src="{{ url('uploads/'.Auth::user()->avatar_filename) }}" alt="Avatar image">
-                            </li>
-                            
                             <li class="nav-item dropdown d-table-cell">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }} <span class="caret"></span>
@@ -69,19 +74,23 @@
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="{{ action('SettingsController@viewSettings')}}">
-                                        Settings
+                                        {{__('messages.settings')}}
                                     </a>
                                     
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
+                                        {{ __('messages.logout') }}
                                     </a>
 
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                         @csrf
                                     </form>
                                 </div>
+                            </li>
+                            
+                            <li class = "nav-item p-2">
+                                <img class="img-thumbnail rounded-circle" style="width:70px; height:70px; object-fit: cover;" src="{{ url('uploads/'.Auth::user()->avatar_filename) }}" alt="Avatar image">
                             </li>
                         @endguest
                     </ul>
