@@ -67,5 +67,13 @@ return [
     'main_desc' => 'Galvenais Apraksts',
     'profile_img_settings' => 'Profila attēla iestatījumi',
     'avatar_file' => 'Profila attēla fails',
+    'login' => 'Pieteikties',
+    'email_address' => 'E-Pasta Adrese',
+    'password' => 'Parole',
+    'remember_me' => 'Atceries Mani',
+    'forgot_pass' => 'Aizmirsi savu paroli?',
+    'register' => 'Registrācija',
+    'confirm_pass' => 'Apstipriniet Paroli'
+    
 ];
 

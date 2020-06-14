@@ -67,5 +67,12 @@ return [
     'main_desc'=> 'Main Description',
     'profile_img_settings' => 'Profile Image Settings',
     'avatar_file' => 'Avatar Image File',
+    'login' => 'Login',
+    'email_address' => 'E-Mail Address',
+    'password' => 'Password',
+    'remember_me' => 'Remember Me',
+    'forgot_pass' => 'Forgot Your Password?',
+    'register' => 'Register',
+    'confirm_pass' => 'Confirm Password'
     
 ];

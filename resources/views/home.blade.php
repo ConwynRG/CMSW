@@ -41,7 +41,7 @@
                                         <div class="mb-1 text-muted">{{ $posts[$i]->created_at->format('d M')}}</div>
                                         <p class="card-text mb-auto"> {{ $posts[$i]->short_description }}</p>
                                         <p class="card-text mt-4 mb-2"> {{ __('messages.author')}}: <a href="{{url('page',$posts[$i]->page_id)}}">{{ $posts[$i]->user->name }}</a></p>
-                                        @if(Auth::user()->isAdmin)
+                                        @if(Auth::check() && Auth::user()->isAdmin)
                                         {{Form::open(array('action'=>['PostController@destroy',$posts[$i]->id], 'method'=>'delete', 'class'=>'m-0'))}}
                                             <input type="submit" class="btn btn-sm btn-outline-danger" value="{{__('messages.delete_post')}}" >
                                         {{Form::close() }}

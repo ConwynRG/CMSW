@@ -56,7 +56,7 @@
                                                 @if(Auth::id() == $page->user_id)
                                                     <a type="button" class="btn btn-sm btn-outline-success" href="{{url('post/'.$post->id.'/edit')}}">{{__('messages.edit_post')}}</a>
                                                 @endif
-                                                @if(Auth::id() == $page->user_id || Auth::user()->isAdmin)
+                                                @if(Auth::id() == $page->user_id || (Auth::check() && Auth::user()->isAdmin))
                                                     {{Form::open(array('action'=>['PostController@destroy',$post->id], 'method'=>'delete', 'class'=>'m-0'))}}
                                                         <input type="submit" class="btn btn-sm btn-outline-danger" style="margin-left:-1px; border-top-left-radius:0px; border-bottom-left-radius:0px;" value="{{__('messages.delete_post')}}" >
                                                     {{Form::close() }}

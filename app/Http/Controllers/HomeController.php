@@ -26,7 +26,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        if(Auth::user()->isAdmin){
+        if(Auth::check() && Auth::user()->isAdmin){
             $posts = Post::all();
         }else{
             $query = Post::where('isPublic',true);
