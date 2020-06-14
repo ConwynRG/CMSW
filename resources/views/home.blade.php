@@ -24,7 +24,7 @@
                         @endif
                         
                             <div class="col-md-6">
-                                <div class="card flex-md-row mb-4 box-shadow h-md-250" style="border: 1px solid @if($posts[$i]->isRecipe) #3CB371 @else #6495ED @endif; border-left-width: 10px;">
+                                <div class="card flex-md-row mb-4 box-shadow h-md-250" style="border: 1px solid @if($posts[$i]->isRecipe) #3CB371 @else #6495ED @endif; border-left-width: 10px; min-height: 300px">
                                     <div class="card-body d-flex flex-column align-items-start half-width">
                                         @if($posts[$i]->isRecipe)
                                             <strong class="d-inline-block mb-2 text-success">
