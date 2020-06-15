@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Post;
+use App\User;
 use App\Image;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -43,10 +44,13 @@ class HomeController extends Controller
         if(Auth::check() && Auth::user()->isAdmin){
             $query = DB::table('posts');
         }else{
-            $query = Post::where('isPublic',true);
-            if(Auth::check()){
-                $query = $query->orWhere('user_id',Auth::id());
-            }
+            $query =DB::table('posts');
+            $query = $query->where(function ($sub_query){
+                $sub_query = $sub_query->where('isPublic',true);
+                if(Auth::check()){
+                    $sub_query = $sub_query->orWhere('user_id',Auth::id());
+                }
+            });
         }
         if(strlen($request['searchText'])>0){
             $query = $query->where(function ($sub_query)use($request) {
@@ -55,12 +59,26 @@ class HomeController extends Controller
             });
         }
         
-        if($request['sortPopular']){
-            $query = $query->orderBy('rating');
+        if($request['sortPopular'] == '1'){
+           $query = $query->reorder('rating','desc');
         }else{
-            $query = $query->orderByDesc('created_at');
+            $query = $query->reorder('created_at','desc');
+        }
+
+        $users = User::All();
+        $user_arr=[];
+        foreach($users as $user){
+            $user_arr[$user->id] = $user;
         }
         
-        return $query->get();
+        
+        $images = Image::All();
+        $image_arr=[];
+        foreach($images as $image){
+            $image_arr[$image->id] = $image;
+        }
+        
+        //return $query->get();
+        return response()->json(array('posts' =>$query->get(), 'users'=>$user_arr,'images'=>$image_arr));
     }
 }
