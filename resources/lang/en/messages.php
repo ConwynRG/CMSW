@@ -73,6 +73,8 @@ return [
     'remember_me' => 'Remember Me',
     'forgot_pass' => 'Forgot Your Password?',
     'register' => 'Register',
-    'confirm_pass' => 'Confirm Password'
+    'confirm_pass' => 'Confirm Password',
+    'search' => 'Search',
+    'popular_posts' => 'Popular post',
     
 ];

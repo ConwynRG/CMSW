@@ -73,7 +73,9 @@ return [
     'remember_me' => 'Atceries Mani',
     'forgot_pass' => 'Aizmirsi savu paroli?',
     'register' => 'Registrācija',
-    'confirm_pass' => 'Apstipriniet Paroli'
+    'confirm_pass' => 'Apstipriniet Paroli',
+    'search' => 'Meklēt',
+    'popular_posts' => 'Populārākas ziņas',
     
 ];
 

@@ -1,6 +1,35 @@
 @extends('layouts.app')
 
 @section('content')
+<script>
+function updatePosts(){
+    var sortPopular = $("#popular_posts").is(':checked');
+    var searchText =  $("#search-input").val();
+    var url = "{{ action('HomeController@sortPosts') }}";
+    var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');    
+    $.ajax({
+            type: "POST",
+            url: url,
+            data: { searchText: searchText, sortPopular: sortPopular, _token: CSRF_TOKEN },
+            success: function (data) {                
+                $('#post-section').html('');
+                console.log(data.length);
+                //for(var i=0, )
+                //    var c = ;
+                //    $('#post_section').append(c);
+                
+            },
+            error: function (data) {
+                console.log('Error:', data);
+            }
+        });
+}
+
+$(document).ready(function(){
+    $("#search-input").keyup(updatePosts);
+    $("input[name=sort_radio]").change(updatePosts);
+});
+</script>
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-18">
@@ -12,12 +41,30 @@
             </div>
             <div class="card">
                 <div class="card-header bg-secondary">
-                    <h3 class="pb-2 mb-2 font-italic border-bottom d-flex justify-content-center font-weight-bold text-white">
+                    <div class="form-group row">
+                        <h3 class="text-center my-auto font-italic font-weight-bold text-white col-sm-2">{{__('messages.search')}}</h3>
+                        <div class="col-sm-7 my-auto">
+                            <input type="text" class="form-control" id="search-input">
+                        </div>
+                        <div class="col-sm-3 text-white lead">
+                            <div class="custom-control custom-radio">
+                            {{Form::radio('sort_radio','latest_posts', true, ['class'=>'custom-control-input', 'id'=>'latest_posts'])}}
+                            {{Form::label('latest_posts', __('messages.latest_posts'),['class'=>'custom-control-label'])}}
+                        </div>
+                        <div class="custom-control custom-radio">
+                            {{Form::radio('sort_radio','popular_posts', false, ['class'=>'custom-control-input', 'id'=>'popular_posts'])}}
+                            {{Form::label('popular_posts', __('messages.popular_posts'),['class'=>'custom-control-label'])}}
+                        </div>
+                        </div>
+                    </div>
+                    
+                    
+                    <h3 class="pb-2 mt-3 pt-2 mb-0 font-italic border-top d-flex justify-content-center font-weight-bold text-white">
                         {{ __('messages.latest_posts') }}
                     </h3>
                 </div>
                 
-                <div class="card-body">
+                <div class="card-body" id="post-section">
                     @for($i = 0; $i < count($posts); $i++)
                         @if(($i % 2) == 0)
                             <div class="row mb-2">
